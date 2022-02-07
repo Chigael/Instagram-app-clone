@@ -15,12 +15,12 @@ request.onupgradeneeded = () => {
     const database = request.result
     console.log();
     //deleting the Object store
-    // database.deleteObjectStore('bio');
-    // database.deleteObjectStor('gallery')  
+    //  database.deleteObjectStore('bio');
+    //  database.deleteObjectStor('gallery')  
 
     //Creating the Object store
-    database.createObjectStore('bio');
-    database.createObjectStore('gallery');
+    database.createObjectStore('bio', { autoIncrement: true});
+    database.createObjectStore('gallery', { autoIncrement: true });
 
 }
 
@@ -34,7 +34,7 @@ const addEntryToDb = (storeName, entry) => {
     const database = request.result
     const transaction = database.transaction([storeName], 'readwrite');
     const store = transaction.objectStore(storeName);
-    store.add(entry)
+     store.add(entry)
 
     // section that show when the database transaction is complete
     transaction.oncomplete = () => alert(`entry added th ${storeName}`) 
@@ -48,5 +48,21 @@ const addEntryToDb = (storeName, entry) => {
     } 
 }
 
+// to get enty from the Database
+const getEntry = (storeName, id) =>{
+    const database = request.result
+    const transaction = database.transaction([storeName])
+    const store = transaction.objectStore(storeName)
+    const getData = store.getAll()
 
-export { request, addEntryToDb }
+    getData.onsuccess = () => {
+        console.log('success', request.result)
+    }
+
+    getData.onerror = () => {
+        console.log('error getting data');
+    }
+}
+
+
+export { request, addEntryToDb, getEntry}
